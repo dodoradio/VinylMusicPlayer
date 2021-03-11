@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -28,6 +29,7 @@ import org.jaudiotagger.tag.TagException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * @author Karim Abou Zeid (kabouzeid), Aidan Follestad (afollestad)
@@ -76,53 +78,50 @@ public class SongDetailDialog extends DialogFragment {
         final TextView bitRate = dialogView.findViewById(R.id.bitrate);
         final TextView samplingRate = dialogView.findViewById(R.id.sampling_rate);
         final TextView replayGain = dialogView.findViewById(R.id.replay_gain);
+        final TextView dateAdded = dialogView.findViewById(R.id.date_added);
+        final TextView dateModified = dialogView.findViewById(R.id.date_modified);
 
-        fileName.setText(makeTextWithTitle(context, R.string.label_file_name, "-"));
-        filePath.setText(makeTextWithTitle(context, R.string.label_file_path, "-"));
+        // default display - will be overwritten here under by metadata extracted from song file
+        fileName.setText(makeTextWithTitle(context, R.string.label_file_name, song.title));
+        filePath.setText(makeTextWithTitle(context, R.string.label_file_path, song.data));
         fileSize.setText(makeTextWithTitle(context, R.string.label_file_size, "-"));
         fileFormat.setText(makeTextWithTitle(context, R.string.label_file_format, "-"));
-        trackLength.setText(makeTextWithTitle(context, R.string.label_track_length, "-"));
+        trackLength.setText(makeTextWithTitle(context, R.string.label_track_length, MusicUtil.getReadableDurationString(song.duration)));
         bitRate.setText(makeTextWithTitle(context, R.string.label_bit_rate, "-"));
         samplingRate.setText(makeTextWithTitle(context, R.string.label_sampling_rate, "-"));
         replayGain.setText(makeTextWithTitle(context, R.string.label_replay_gain, "-"));
+        dateAdded.setText(makeTextWithTitle(context, R.string.label_date_added, new Date(1000 * song.dateAdded).toString()));
+        dateModified.setText(makeTextWithTitle(context, R.string.label_date_modified, new Date(1000 * song.dateModified).toString()));
 
-        if (song != null) {
-            final File songFile = new File(song.data);
-            if (songFile.exists()) {
-                fileName.setText(makeTextWithTitle(context, R.string.label_file_name, songFile.getName()));
-                filePath.setText(makeTextWithTitle(context, R.string.label_file_path, songFile.getAbsolutePath()));
-                fileSize.setText(makeTextWithTitle(context, R.string.label_file_size, getFileSizeString(songFile.length())));
-                try {
-                    AudioFile audioFile = AudioFileIO.read(songFile);
-                    AudioHeader audioHeader = audioFile.getAudioHeader();
+        final File songFile = new File(song.data);
+        if (songFile.exists()) {
+            fileName.setText(makeTextWithTitle(context, R.string.label_file_name, songFile.getName()));
+            filePath.setText(makeTextWithTitle(context, R.string.label_file_path, songFile.getAbsolutePath()));
+            fileSize.setText(makeTextWithTitle(context, R.string.label_file_size, getFileSizeString(songFile.length())));
+            try {
+                AudioFile audioFile = AudioFileIO.read(songFile);
+                AudioHeader audioHeader = audioFile.getAudioHeader();
 
-                    fileFormat.setText(makeTextWithTitle(context, R.string.label_file_format, audioHeader.getFormat()));
-                    trackLength.setText(makeTextWithTitle(context, R.string.label_track_length, MusicUtil.getReadableDurationString(audioHeader.getTrackLength() * 1000)));
-                    bitRate.setText(makeTextWithTitle(context, R.string.label_bit_rate, audioHeader.getBitRate() + " kb/s"));
-                    samplingRate.setText(makeTextWithTitle(context, R.string.label_sampling_rate, audioHeader.getSampleRate() + " Hz"));
+                fileFormat.setText(makeTextWithTitle(context, R.string.label_file_format, audioHeader.getFormat()));
+                trackLength.setText(makeTextWithTitle(context, R.string.label_track_length, MusicUtil.getReadableDurationString(audioHeader.getTrackLength() * 1000)));
+                bitRate.setText(makeTextWithTitle(context, R.string.label_bit_rate, audioHeader.getBitRate() + " kb/s"));
+                samplingRate.setText(makeTextWithTitle(context, R.string.label_sampling_rate, audioHeader.getSampleRate() + " Hz"));
 
-                    float rgTrack = song.replayGainTrack;
-                    float rgAlbum = song.replayGainAlbum;
-                    String replayGainValues = "";
-                    if (rgTrack != 0.0) {
-                        replayGainValues += String.format("%s: %.2f dB ", context.getString(R.string.song), rgTrack);
-                    }
-                    if (rgAlbum != 0.0) {
-                        replayGainValues += String.format("%s: %.2f dB ", context.getString(R.string.album), rgAlbum);
-                    }
-                    if (replayGainValues.equals("")) {
-                        replayGainValues = context.getString(R.string.none);
-                    }
-                    replayGain.setText(makeTextWithTitle(context, R.string.label_replay_gain, replayGainValues));
-                } catch (@NonNull CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
-                    Log.e(TAG, "error while reading the song file", e);
-                    // fallback
-                    trackLength.setText(makeTextWithTitle(context, R.string.label_track_length, MusicUtil.getReadableDurationString(song.duration)));
+                float rgTrack = song.replayGainTrack;
+                float rgAlbum = song.replayGainAlbum;
+                String replayGainValues = "";
+                if (rgTrack != 0.0) {
+                    replayGainValues += String.format("%s: %.2f dB ", context.getString(R.string.song), rgTrack);
                 }
-            } else {
-                // fallback
-                fileName.setText(makeTextWithTitle(context, R.string.label_file_name, song.title));
-                trackLength.setText(makeTextWithTitle(context, R.string.label_track_length, MusicUtil.getReadableDurationString(song.duration)));
+                if (rgAlbum != 0.0) {
+                    replayGainValues += String.format("%s: %.2f dB ", context.getString(R.string.album), rgAlbum);
+                }
+                if (replayGainValues.equals("")) {
+                    replayGainValues = context.getString(R.string.none);
+                }
+                replayGain.setText(makeTextWithTitle(context, R.string.label_replay_gain, replayGainValues));
+            } catch (@NonNull CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
+                Log.e(TAG, "error while reading the song file", e);
             }
         }
 
