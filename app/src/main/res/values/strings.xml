@@ -46,7 +46,6 @@
     <string name="unknown_genre">Unknown genre</string>
     <string name="album_artist">Album artist</string>
     <string name="year">Year</string>
-    <string name="track_hint">"Track (2 for track 2 or 3004 for CD3 track 4)"</string>
     <string name="track_number">"Track Number"</string>
     <string name="disc_number">"Disc Number"</string>
     <string name="lyrics">Lyrics</string>
@@ -199,6 +198,7 @@
     <string name="cancel_current_timer">Cancel current timer</string>
     <string name="sleep_timer_canceled">Sleep timer canceled.</string>
     <string name="sleep_timer_set">Sleep timer set for %d minutes from now.</string>
+    <string name="time_unit_minutes">min</string>
     <string name="action_new_playlist">New playlist…</string>
     <string name="new_playlist_title">New playlist</string>
     <string name="grid_size_1" translatable="false">1</string>
@@ -235,7 +235,6 @@
     <string name="maarten_corpel_summary">For making the Play Store illustration and the empty album cover.</string>
     <string name="aleksandar_tesic_summary">For helping me with the design.</string>
     <string name="website">Website</string>
-    <string name="loading_products">Loading products…</string>
     <string name="up_next">Up next</string>
     <string name="pref_title_now_playing_screen_appearance">Appearance</string>
     <string name="intro_label">Introduction</string>
@@ -330,6 +329,9 @@
     <string name="pref_summary_rg_preamp">Set preamp when ReplayGain is enabled</string>
     <string name="pref_rg_disabled">Disabled</string>
     <string name="error_no_app_for_intent">No application is available to open this page.</string>
+    <string name="confirm_adding_duplicates">Add tracks already in selected playlist?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
     <!-- SAF -->
     <string name="saf_error_uri">Can\'t get SAF URI</string>
     <string name="saf_write_failed">File write failed: %s</string>
@@ -356,4 +358,7 @@
     <string name="action_toggle_favorite">Toggle favorite</string>
     <string name="pref_summary_show_song_number">Show the song track number in the playing queue and the notification</string>
     <string name="pref_title_show_song_number">Show song track number</string>
+    <string name="auto_limited_listing_title">Limited listing while driving</string>
+    <string name="auto_limited_listing_subtitle">Open the app to see the full list</string>
+
 </resources>
