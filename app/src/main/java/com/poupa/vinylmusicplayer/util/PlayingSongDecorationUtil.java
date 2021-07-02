@@ -4,6 +4,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,6 +37,7 @@ public class PlayingSongDecorationUtil {
     static {
         sIconAnimation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         sIconAnimation.setDuration(ViewUtil.VINYL_MUSIC_PLAYER_ANIM_TIME);
+        sIconAnimation.setInterpolator(new LinearInterpolator());
         sIconAnimation.setRepeatCount(Animation.INFINITE);
     }
 
